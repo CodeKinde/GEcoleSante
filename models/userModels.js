@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         enum:['admin', 'etudiant','enseignant'],
     },
-    actif:{
+    active:{
         type:Boolean,
         default:true
     },
@@ -70,11 +70,7 @@ const userSchema = new mongoose.Schema({
         ref:"Classe",
         required:true
     },
-    filiereId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Filiere",
-        required:true
-    },
+
     createdAt:{
         type:Date,
         default:Date.now()

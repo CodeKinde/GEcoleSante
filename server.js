@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-dotenv.config()
-const app = require('./app');
-const DATABASE = process.env.DATABASE;
 
-const DATABASE_LOCAL = process.env.DATABASE_LOCAl;
+dotenv.config();
+// dotenv.config({ path: './.env.production' });
+
+const app = require('./app');
+ const DATABASE_LOCAL = process.env.DATABASE_LOCAl;
+const DATABASE_DEV = process.env.DATABASE_DEV;
+const DATABASE_PROD= process.env.DATABASE_PROD;
 
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
 process.on('uncaughtException', err =>{
@@ -14,14 +17,14 @@ process.on('uncaughtException', err =>{
 })
 let DB;
 if(process.env.NODE_ENV === "development"){
-    DB = DB = DATABASE.replace(
-        '<PASSWORD>',
-        DATABASE_PASSWORD
-    );
+     DB = DATABASE_LOCAL;
 }
 
 if(process.env.NODE_ENV === "production"){
-   DB =DATABASE_LOCAL
+   DB = DATABASE_PROD.replace(
+        '<PASSWORD>',
+        DATABASE_PROD
+    );
 }
 
 mongoose.connect(DB, {
@@ -42,6 +45,4 @@ process.on('unhandledRejectio', err =>{
     server.close(() =>{
         process.exit(1)
     })
-    
-    
 })

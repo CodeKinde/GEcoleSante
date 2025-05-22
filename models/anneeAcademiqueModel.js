@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const anneeAcademiqueSchema = new mongoose.Schema({
-    name:{
+    years:{
         type:String,
         required:true
     },
@@ -12,5 +12,5 @@ const anneeAcademiqueSchema = new mongoose.Schema({
     toJSON:{virtuals:true},
     toObject:{virtuals:true}
 })
-const AnneeAcademiqueSchema = mongoose.model('AnneeAcademiqueSchema', anneeAcademiqueSchema);
-module.exports = AnneeAcademiqueSchema;
+const AnneeAcademique = mongoose.model('AnneeAcademique', anneeAcademiqueSchema);
+module.exports = AnneeAcademique;

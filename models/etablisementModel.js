@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 const etablisementSchema = new mongoose.Schema({
     name:{
         type:String,
-        unique:true,
         required:true
     },
     anneeAcademiqueId:{
-        type:String,
+        type:mongoose.Schema.ObjectId,
+        ref:"AnneeAcademique",
         required:true,
     },
     
