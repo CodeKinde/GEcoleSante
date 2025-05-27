@@ -1,12 +1,21 @@
 const mongoose = require('mongoose')
 const classeSchema = new mongoose.Schema({
-    name:{
+    nom:{
+        type:String,
+        required:true
+    },
+     niveau:{
         type:String,
         required:true
     },
     anneeAcademiqueId:{
         type:mongoose.Schema.ObjectId,
-        ref:"Classe",
+        ref:"AnneeAcademique",
+        required:true,
+    },
+     filiereId:{
+        type:mongoose.Schema.ObjectId,
+        ref:"Filiere",
         required:true,
     },
     

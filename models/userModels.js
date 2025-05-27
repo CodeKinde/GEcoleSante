@@ -22,11 +22,14 @@ const userSchema = new mongoose.Schema({
         type:Date,
         required:true
     },
+    lieuNaissance:{
+        type:Date,
+    },
     dateInscription:{
         type:Date,
         default:Date.now()
     },
-    sex:{
+    sexe:{
         type:String,
         enum:['Homme', 'Femme'],
         required:true
@@ -39,7 +42,9 @@ const userSchema = new mongoose.Schema({
     
     adresse:{
         type:String,
-        required:true
+    },
+    nationalite:{
+        type:String,
     },
     password:{
         type:String,
@@ -51,7 +56,7 @@ const userSchema = new mongoose.Schema({
         required:true
     },
     
-    statut: {
+    statuts: {
     type: String,
     enum: ["inscrit", "redoublant", "retrait", "diplômé"],
     default: "inscrit"
@@ -70,7 +75,7 @@ const userSchema = new mongoose.Schema({
         ref:"Classe",
         required:true
     },
-
+    photo:String,
     createdAt:{
         type:Date,
         default:Date.now()

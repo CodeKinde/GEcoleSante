@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const filiereSchema = new mongoose.Schema({
-    name:{
+    nom:{
         type:String,
         unique:true,
         required:true
@@ -14,10 +14,6 @@ const filiereSchema = new mongoose.Schema({
         required:true
     },
      description:{
-        type:String,
-        required:true
-    },
-     type:{
         type:String,
         required:true
     },

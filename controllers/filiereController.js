@@ -1,6 +1,5 @@
 const Factory = require('./handlerFactory');
-const Filiere = require('./../models/classeModel')
-
+const Filiere = require('./../models/filiereModel')
 
 exports.getAllFiliere = Factory.getAll(Filiere)
 exports.createFiliere = Factory.createOne(Filiere);

@@ -8,6 +8,6 @@ router
 router
 .route('/:id')
 .get(filiereController.getFiliere)
-.update(filiereController.updateFiliere)
+.patch(filiereController.updateFiliere)
 .delete(filiereController.deleteFiliere)
 module.exports = router;

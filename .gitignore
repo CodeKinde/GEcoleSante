@@ -3,4 +3,5 @@ npm-debug.log
 bun.lockb
 .env.production
 .env
+.prettierrc
 

@@ -8,6 +8,6 @@ router
 router
 .route('/:id')
 .get(classeController.getClasse)
-.update(classeController.updateClasse)
+.patch(classeController.updateClasse)
 .delete(classeController.deleteClasse)
 module.exports = router;
