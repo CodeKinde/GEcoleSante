@@ -1,10 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const validator= require('validator');
 const userSchema = new mongoose.Schema({
-    matricule:{
-        type:String,
-        unique:true,
-        default:"none"
-    },
     nom:{
         type:String,
         required:true
@@ -18,34 +14,23 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    dateNaissance:{
-        type:Date,
-        required:true
-    },
-    lieuNaissance:{
-        type:Date,
-    },
-    dateInscription:{
-        type:Date,
-        default:Date.now()
-    },
+  
     sexe:{
         type:String,
-        enum:['Homme', 'Femme'],
+        enum:['H', 'F'],
         required:true
     },
     email:{
         type:String,
         required:true,
-        unique:true
+        unique:true,
+        lowercase:true,
+        validate:[validator.isEmail, "Please provide a valid email"]
     },
-    
     adresse:{
         type:String,
     },
-    nationalite:{
-        type:String,
-    },
+   
     password:{
         type:String,
         required:true
@@ -55,27 +40,15 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    
-    statuts: {
-    type: String,
-    enum: ["inscrit", "redoublant", "retrait", "diplômé"],
-    default: "inscrit"
-    },
 
     role:{
         type:String,
-        enum:['admin', 'etudiant','enseignant'],
+        enum:['admin', 'etudiant','enseignant','secretaire'],
     },
     active:{
         type:Boolean,
         default:true
     },
-    classeId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Classe",
-        required:true
-    },
-    photo:String,
     createdAt:{
         type:Date,
         default:Date.now()
