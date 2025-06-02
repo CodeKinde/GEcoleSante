@@ -1,11 +1,8 @@
 const mongoose = require('mongoose');
 const validator= require('validator');
+const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
-    nom:{
-        type:String,
-        required:true
-    },
-    prenom:{
+    name:{
         type:String,
         required:true
     },
@@ -14,7 +11,6 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-  
     sexe:{
         type:String,
         enum:['H', 'F'],
@@ -25,12 +21,11 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true,
         lowercase:true,
-        validate:[validator.isEmail, "Please provide a valid email"]
+        validate:[validator.isEmail, "Veuillez fournir une adresse e-mail valide!"]
     },
     adresse:{
         type:String,
     },
-   
     password:{
         type:String,
         required:true
@@ -38,12 +33,18 @@ const userSchema = new mongoose.Schema({
 
     passwordConfirm:{
         type:String,
-        required:true
+        required:true,
+        validate:{
+            validator:function(el){
+                return el === this.password;
+            },
+            message: "Les mots de passe ne sont pas les mêmes!"
+        }
     },
 
     role:{
         type:String,
-        enum:['admin', 'etudiant','enseignant','secretaire'],
+        enum:['admin', 'etudiant','enseignant','secrétaire'],
     },
     active:{
         type:Boolean,
@@ -57,5 +58,9 @@ const userSchema = new mongoose.Schema({
     toJSON:{virtuals:true},
     toObject:{virtuals:true}
 })
+ userSchema.pre('save', async function(next){
+    if(!this.isModified('password')) return next();
+    this.password = await bcrypt.hash(this.password, 12);
+ })
 const Users = mongoose.model('User', userSchema);
 module.exports = Users;
