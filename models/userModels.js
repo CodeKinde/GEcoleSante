@@ -11,11 +11,6 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    sexe:{
-        type:String,
-        enum:['H', 'F'],
-        required:true
-    },
     email:{
         type:String,
         required:true,
@@ -45,11 +40,14 @@ const userSchema = new mongoose.Schema({
     role:{
         type:String,
         enum:['admin', 'etudiant','enseignant','secrétaire'],
+        required:true
     },
     active:{
         type:Boolean,
         default:true
     },
+    photo:String,
+    passwordChangedAt:Date,
     createdAt:{
         type:Date,
         default:Date.now()
@@ -61,6 +59,22 @@ const userSchema = new mongoose.Schema({
  userSchema.pre('save', async function(next){
     if(!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
+    this.passwordConfirm = undefined;
+    next()
  })
+ userSchema.methods.correctPassord = async function(candidatePassword, userPassword){
+    return await bcrypt.compare(candidatePassword, userPassword);
+ }
+ userSchema.methods.changedPasswordAfter = function(JWTimestamp){
+    if(this.passwordChangedAt){
+        const changedTimestamp = parseInt(this.passwordChangedAt.getTime()/100, 10);   
+        console.log(changedTimestamp, JWTimestamp);
+                
+     return JWTimestamp < changedTimestamp;// 300 < 200
+    }
+    // FALSE means NOT changed
+    return false;
+    
+ } 
 const Users = mongoose.model('User', userSchema);
 module.exports = Users;

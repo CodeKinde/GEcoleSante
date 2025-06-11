@@ -6,25 +6,12 @@ const StudentSchema = new mongoose.Schema({
         unique:true,
         required:true
     },
-    nom:{
-        type:String,
-        required:true
-    },
-    prenom:{
-        type:String,
-        required:true
-    },
-    phone:{
-        type:Number,
-        required:true,
-        unique:true
-    },
     dateNaissance:{
         type:Date,
         required:true
     },
     lieuNaissance:{
-        type:Date,
+        type:String,
     },
     dateInscription:{
         type:Date,
@@ -35,10 +22,6 @@ const StudentSchema = new mongoose.Schema({
         enum:['Homme', 'Femme'],
         required:true
     },
-    
-    adresse:{
-        type:String,
-    },
     nationalite:{
         type:String,
     },
@@ -48,13 +31,22 @@ const StudentSchema = new mongoose.Schema({
     enum: ["inscrit", "redoublant", "retrait", "diplômé"],
     default: "inscrit"
     },
+    userId:{
+         type:mongoose.Schema.ObjectId,
+        ref:"User",
+        required:true
+    },
 
     classeId:{
         type:mongoose.Schema.ObjectId,
         ref:"Classe",
         required:true
     },
-    photo:String,
+    anneeAcademiqueId:{
+        type:mongoose.Schema.ObjectId,
+        ref:"AnneeAcademique",
+        required:true,
+    },
     createdAt:{
         type:Date,
         default:Date.now()
@@ -62,6 +54,19 @@ const StudentSchema = new mongoose.Schema({
 },{
     toJSON:{virtuals:true},
     toObject:{virtuals:true}
-})
+});
+StudentSchema.pre(/^find/, function(next){
+    this.populate({
+        path:"userId",
+        select:"name email addresse, phone"
+    }).populate({
+        path:"anneeAcademiqueId",
+        select:"years"
+    }).populate({
+        path:"classeId",
+        select:"nom niveau"
+    });
+    next()
+});
 const Student = mongoose.model('Student', StudentSchema);
 module.exports = Student;
