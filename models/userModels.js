@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     adresse:{
         type:String,
     },
+    
     password:{
         type:String,
         required:true
@@ -40,7 +41,8 @@ const userSchema = new mongoose.Schema({
     role:{
         type:String,
         enum:['admin', 'etudiant','enseignant','secrétaire'],
-        required:true
+        required:true,
+        default:"etudiant"
     },
     active:{
         type:Boolean,

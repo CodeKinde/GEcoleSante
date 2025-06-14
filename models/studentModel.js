@@ -28,7 +28,7 @@ const StudentSchema = new mongoose.Schema({
     
     statuts: {
     type: String,
-    enum: ["inscrit", "redoublant", "retrait", "diplômé"],
+    enum: ["inscrit", "en_attente", "suspendu", "abandon", "diplomé"],
     default: "inscrit"
     },
     userId:{
@@ -58,7 +58,7 @@ const StudentSchema = new mongoose.Schema({
 StudentSchema.pre(/^find/, function(next){
     this.populate({
         path:"userId",
-        select:"name email addresse, phone"
+        select:"name email addresse phone"
     }).populate({
         path:"anneeAcademiqueId",
         select:"years"
