@@ -18,11 +18,7 @@ const courSchema = new mongoose.Schema({
         required:true
     },
      semestre:{
-        type:Number,
-        required:true
-    },
-     niveau:{
-        type:Number,
+        type:String,
         required:true
     },
     description:{
@@ -31,7 +27,7 @@ const courSchema = new mongoose.Schema({
     },
     enseignantId:{
         type:mongoose.Schema.ObjectId,
-        ref:"User",
+        ref:"Enseignant",
         required:true,
     },
     

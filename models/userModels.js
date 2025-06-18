@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         unique:true
     },
     email:{
+
         type:String,
         required:true,
         unique:true,
@@ -37,18 +38,16 @@ const userSchema = new mongoose.Schema({
             message: "Les mots de passe ne sont pas les mêmes!"
         }
     },
-
     role:{
         type:String,
-        enum:['admin', 'etudiant','enseignant','secrétaire'],
+        enum:['admin','secrétaire','surveillant'],
         required:true,
-        default:"etudiant"
+        default:"admin"
     },
     active:{
         type:Boolean,
         default:true
     },
-    photo:String,
     passwordChangedAt:Date,
     createdAt:{
         type:Date,

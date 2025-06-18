@@ -1,6 +1,30 @@
 const mongoose = require('mongoose');
 const validator= require('validator');
 const StudentSchema = new mongoose.Schema({
+    nom:{
+    type:String,
+    required:true
+    },
+    prenom:{
+    type:String,
+    required:true
+    },
+    phone:{
+        type:Number,
+        required:true,
+        unique:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true,
+        lowercase:true,
+        validate:[validator.isEmail, "Veuillez fournir une adresse e-mail valide!"]
+    },
+    adress:{
+        type:String,
+    },
+        
     matricule:{
         type:String,
         unique:true,
@@ -31,12 +55,7 @@ const StudentSchema = new mongoose.Schema({
     enum: ["inscrit", "enAttente", "suspendu", "abandon", "diplomé"],
     default: "inscrit"
     },
-    userId:{
-         type:mongoose.Schema.ObjectId,
-        ref:"User",
-        required:true
-    },
-
+    photo:String,
     classeId:{
         type:mongoose.Schema.ObjectId,
         ref:"Classe",

@@ -17,11 +17,14 @@ exports.getAllEnseignant = catchAsync(async(req, res) =>{
          {$unwind:"$user"},
          {
             $lookup:{
-                from:"specialite",
+                from:"filieres",
                 localField:'specialiteId',
                 foreignField:"_id",
                 as:"specialite"
             }
+         },
+         {
+
          },
          {$unwind:'$specialite'},
          {

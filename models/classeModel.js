@@ -13,12 +13,6 @@ const classeSchema = new mongoose.Schema({
         ref:"AnneeAcademique",
         required:true,
     },
-    etablissementId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Etablissement",
-        required:true,
-    },
-    
      filiereId:{
         type:mongoose.Schema.ObjectId,
         ref:"Filiere",
