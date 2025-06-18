@@ -8,9 +8,8 @@ const filiereRouter = require('./routes/filiereRoutes');
 const classeRouter = require('./routes/classeRoutes')
 const userRouter = require('./routes/userRoutes')
 const studentRouter = require('./routes/studentRoutes')
-const courRouter = require('./routes/courRoutes')
-
-
+const courRouter = require('./routes/courRoutes');
+const enseignantRouter = require('./routes/enseignantRouter')
 const globalErrorHandler = require('./controllers/errorController')
 
 
@@ -33,6 +32,8 @@ app.use('/api/v1/classes', classeRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/cours', courRouter);
+app.use('/api/v1/enseignants', enseignantRouter);
+
 
 
 

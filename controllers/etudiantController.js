@@ -3,27 +3,7 @@ const Etudiant = require('./../models/studentModel');
 const User = require('./../models/userModels')
 const mongoose = require('mongoose')
 const catchAsync = require('../utils/catchAsync');
-exports.getAllEtudiants = catchAsync(async(req, res, next) =>{
-    //BUILD QUERY
-    const queryObj = {...req.query}
-    const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach(el => delete queryObj[el]);
-    // 2) Advance filtering
-    let queryStr = JSON.stringify(queryObj)
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-    const query =  Etudiant.find(JSON.parse(queryStr));
-    //Sorting
-    // if(!req.query.sort){
-    //     const sortBy = req.query.sort.split(',').join(' '); 
-    // }
-    const etudiants = await query
-    res.status(200).json({
-        status:"Success",
-        results:etudiants.length,
-        data:etudiants
-    })
-    
-});
+
 exports.getEtudiant = Factory.getOne(Etudiant);
 exports.createEtudiant = catchAsync(async (req, res, next) =>{
     const {
@@ -60,9 +40,7 @@ exports.createEtudiant = catchAsync(async (req, res, next) =>{
 }) 
 
 exports.getEtudiantByClasse = catchAsync(async(req, res) =>{
-const classeId = new mongoose.Types.ObjectId(req.params.classeId);
-    console.log(classeId);
-    
+const classeId = new mongoose.Types.ObjectId(req.params.classeId);    
     const studentbyClasses = await Etudiant.aggregate([
         {
             $match:{
@@ -111,7 +89,7 @@ const classeId = new mongoose.Types.ObjectId(req.params.classeId);
             classe:"$classe.nom",
             niveau:"$classe.niveau",
             dateInscription:1,
-            annee:"$year.years"
+            annee:"$year.nom"
         }
      },
      {$sort:{name:-1}}
@@ -182,3 +160,188 @@ exports.getEtudiantByAcademicYear = catchAsync(async(req, res) =>{
         data:etudiantByYears
     })
 })
+
+
+exports.getEtudiantByFiliere = catchAsync(async(req, res) =>{
+const filiereId = new mongoose.Types.ObjectId(req.params.filiereId);
+    
+    const etudiantbyFiliere = await Etudiant.aggregate([
+       
+        {
+        //jointure par utilisateur
+        $lookup:{
+            from:"users",
+            localField:"userId",
+            foreignField:"_id",
+            as:"user"
+        }
+     },
+     {$unwind:'$user'},
+     //jointure par classe
+     {
+         $lookup:{
+            from:"classes",
+            localField:"classeId",
+            foreignField:"_id",
+            as:"classe"
+        }
+     },
+     {$unwind:'$classe'},
+     //jointure par Filiere
+      {
+         $lookup:{
+            from:"filieres",
+            localField:"classe.filiereId",
+            foreignField:"_id",
+            as:"filiere"
+        }
+     },
+     {$unwind:'$filiere'},
+      {
+            $match:{
+                'filiere._id': filiereId,
+            },
+
+        },
+     {
+        $group:{
+                _id:"$filiere._id",
+                Filière:{$first:"$filiere.nom"}, 
+                Code:{$first:"$filiere.code"},            
+                etudiants:{
+                    $push:{
+                    name:"$user.name",
+                    email:"$user.email",
+                    Télephone:"$user.phone",
+                    matricule:'$matricule',
+                    classe:"$classe.nom",
+                    sexe:'$sexe',
+                }
+                }
+            }
+     },
+     {$sort:{name:-1}}
+
+    ]);
+    
+    res.status(200).json({
+        status:"Success",
+        results:etudiantbyFiliere.length,
+        data:etudiantbyFiliere
+    });
+})
+
+
+exports.getAllEtudiants = catchAsync(async(req, res) =>{
+    const filters = [];
+    if(req.query.classeId){
+        filters.push({
+            classeId:new mongoose.Types.ObjectId(req.query.classeId)
+        })
+    }
+    if(req.query.anneeAcademiqueId){
+        filters.push({
+            anneeAcademiqueId:new mongoose.Types.ObjectId(req.query.anneeAcademiqueId)
+        })
+    }
+
+    if(req.query.sexe){
+        filters.push({sexe:req.query.sexe})
+    }
+
+    const search = req.query.search;
+    const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 10);
+    const skip = (page -1) * limit;
+    console.log(search);
+    
+    const etudiants =  await Etudiant.aggregate([
+        {
+            $lookup:{
+                from:'users',
+                localField:'userId',
+                foreignField:'_id',
+                as:'user'
+            },
+        },
+         {$unwind:'$user'},
+
+         {
+            $lookup:{
+                from:'classes',
+                localField:'classeId',
+                foreignField:'_id',
+                as:'classe'
+            },
+        },
+         {$unwind:'$classe'},
+
+         {
+            $lookup:{
+                from:"filieres",
+                localField:"classe.filiereId",
+                foreignField:"_id",
+                as:'filiere'
+            },
+         },
+         {$unwind:"$filiere"},
+
+         {
+            $lookup:{
+                from:'anneeAcademiques',
+                localField:'anneeAcademiqueId',
+                foreignField:'_id',
+                as:'year'
+            },
+        },
+        {$unwind:'$year'},
+         // Recherche par nom/prenom/matricule
+     ...(search ?
+        [{
+            $match:{
+                $or:[
+                    {'user.name':{$regex:search, $options:'i'}},
+                    {matricule:{$regex:search, $options:'i'}}
+                ]
+            }
+
+        }] 
+
+     :[]),
+     ...(filters.length ? [{$match:{$and:filters}}]: []),
+    {
+    $project: {
+      _id: 1,
+      matricule: 1,
+      nom: '$user.name',
+      Télephone:'$user.phone',
+      email: '$user.email',
+      dateInscription:1,
+      dateNaissance:1,
+      lieuNaissance:1,
+      nationalite:1,
+      statut:1,
+      active:"$user.active",
+      sexe: 1,
+      addresse:'$user.address',
+      classe: '$classe.nom',
+      niveau: '$classe.niveau',
+      filiere:'$filiere.nom',
+      Année:'$year.nom'
+    }
+   },
+   {$sort:{name:1}},
+   {$skip: skip},
+   {$limit: limit}
+ ]);
+ const total = await Etudiant.countDocuments(filters);
+ res.status(200).json({
+    status:"Success",
+    total,
+    results:etudiants.length,
+    page:parseInt(page),
+    pages:Math.ceil(total/ limit),
+    data:etudiants
+ });
+});
+

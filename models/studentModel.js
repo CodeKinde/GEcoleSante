@@ -19,7 +19,7 @@ const StudentSchema = new mongoose.Schema({
     },
     sexe:{
         type:String,
-        enum:['Homme', 'Femme'],
+        enum:['homme', 'femme'],
         required:true
     },
     nationalite:{
@@ -28,7 +28,7 @@ const StudentSchema = new mongoose.Schema({
     
     statuts: {
     type: String,
-    enum: ["inscrit", "en_attente", "suspendu", "abandon", "diplomé"],
+    enum: ["inscrit", "enAttente", "suspendu", "abandon", "diplomé"],
     default: "inscrit"
     },
     userId:{

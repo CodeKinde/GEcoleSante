@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const anneeAcademiqueSchema = new mongoose.Schema({
-    years:{
+    nom:{
         type:String,
         required:true
     },

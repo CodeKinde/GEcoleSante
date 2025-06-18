@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         lowercase:true,
         validate:[validator.isEmail, "Veuillez fournir une adresse e-mail valide!"]
     },
-    adresse:{
+    adress:{
         type:String,
     },
     

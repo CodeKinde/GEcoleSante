@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const courSchema = new mongoose.Schema({
-    titre:{
+    nom:{
         type:String,
         required:true
     },
@@ -9,8 +9,7 @@ const courSchema = new mongoose.Schema({
         unique:true,
         required:true
     },
-
-    volume_horaire:{
+    volumeHoraire:{
         type:Number,
         required:true
     },
@@ -30,19 +29,21 @@ const courSchema = new mongoose.Schema({
         type:String,
         trim:true
     },
-    enseignant_id:{
+    enseignantId:{
         type:mongoose.Schema.ObjectId,
         ref:"User",
         required:true,
     },
     
-     classe_id:{
+     classeId:{
         type:mongoose.Schema.ObjectId,
         ref:"Classe",
         required:true,
     },
-    anneeAcademique:{
-        type:String
+    anneeAcademiqueId:{
+        type:mongoose.Schema.ObjectId,
+        ref:"AnneeAcademique",
+        required:true,
     },
     
     createdAt:{

@@ -9,10 +9,6 @@ const filiereSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-     duree:{
-        type:String,
-        required:true
-    },
      description:{
         type:String,
         required:true
