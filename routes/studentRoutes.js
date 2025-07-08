@@ -7,8 +7,13 @@ router.get('/filiere/:filiereId', studentController.getEtudiantByFiliere);
 router.get('/studentByYears', studentController.getEtudiantByAcademicYear);
 
 router
-.route('/') 
-.get(studentController.getAllEtudiants)
-.post(studentController.createEtudiant)
+  .route('/')
+  .get(studentController.getAllEtudiants)
+  .post(studentController.createEtudiant);
+router
+  .route('/:id')
+  .get(studentController.getEtudiant)
+  .patch(studentController.updateEtudiant)
+  .delete(studentController.deleteEtudiant);
 
 module.exports = router;

@@ -1,54 +1,63 @@
-const mongoose = require('mongoose')
-const courSchema = new mongoose.Schema({
-    nom:{
-        type:String,
-        required:true
+const mongoose = require('mongoose');
+const Student = require('./studentModel');
+const courSchema = new mongoose.Schema(
+  {
+    nom: {
+      type: String,
+      required: true,
     },
-    code:{
-        type:String,
-        unique:true,
-        required:true
+    code: {
+      type: String,
+      unique: true,
+      required: true,
     },
-    volumeHoraire:{
-        type:Number,
-        required:true
+    volumeHoraire: {
+      type: Number,
+      required: true,
     },
-    coefficient:{
-        type:Number,
-        required:true
+    coefficient: {
+      type: Number,
+      required: true,
     },
-     semestre:{
-        type:String,
-        required:true
+    semestre: {
+      type: String,
+      enum: ['S1', 'S2'],
+      required: true,
     },
-    description:{
-        type:String,
-        trim:true
+    description: {
+      type: String,
+      trim: true,
     },
-    enseignantId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Enseignant",
-        required:true,
+    enseignantId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Enseignant',
+      required: true,
     },
-    
-     classeId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Classe",
-        required:true,
+
+    classeId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Classe',
+      required: true,
     },
-    anneeAcademiqueId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"AnneeAcademique",
-        required:true,
+    programme: {
+      type: String,
     },
-    
-    createdAt:{
-        type:Date,
-        default:Date.now()
-    }
-},{
-    toJSON:{virtuals:true},
-    toObject:{virtuals:true}
-})
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+courSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'enseignantId',
+    select: 'nom prenom specialite',
+  });
+  next();
+});
 const Cour = mongoose.model('Cour', courSchema);
 module.exports = Cour;

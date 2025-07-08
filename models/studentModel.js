@@ -1,91 +1,94 @@
 const mongoose = require('mongoose');
-const validator= require('validator');
-const StudentSchema = new mongoose.Schema({
-    nom:{
-    type:String,
-    required:true
+const validator = require('validator');
+const StudentSchema = new mongoose.Schema(
+  {
+    nom: {
+      type: String,
+      required: true,
     },
-    prenom:{
-    type:String,
-    required:true
+    prenom: {
+      type: String,
+      required: true,
     },
-    phone:{
-        type:Number,
-        required:true,
-        unique:true
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        validate:[validator.isEmail, "Veuillez fournir une adresse e-mail valide!"]
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      validate: [
+        validator.isEmail,
+        'Veuillez fournir une adresse e-mail valide!',
+      ],
     },
-    adress:{
-        type:String,
+    adresse: {
+      type: String,
     },
-        
-    matricule:{
-        type:String,
-        unique:true,
-        required:true
+
+    matricule: {
+      type: String,
+      unique: true,
+      required: true,
     },
-    dateNaissance:{
-        type:Date,
-        required:true
+    dateNaissance: {
+      type: Date,
+      required: true,
     },
-    lieuNaissance:{
-        type:String,
+    lieuNaissance: {
+      type: String,
     },
-    dateInscription:{
-        type:Date,
-        default:Date.now()
+    dateInscription: {
+      type: Date,
+      default: Date.now(),
     },
-    sexe:{
-        type:String,
-        enum:['homme', 'femme'],
-        required:true
+    sexe: {
+      type: String,
+      enum: ['homme', 'femme'],
+      required: true,
     },
-    nationalite:{
-        type:String,
+    nationalite: {
+      type: String,
     },
-    
+
     statuts: {
-    type: String,
-    enum: ["inscrit", "enAttente", "suspendu", "abandon", "diplomé"],
-    default: "inscrit"
+      type: String,
+      enum: ['inscrit', 'enAttente', 'suspendu', 'abandon', 'diplomé'],
+      default: 'inscrit',
     },
-    photo:String,
-    classeId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"Classe",
-        required:true
+    photo: String,
+    classeId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Classe',
+      required: true,
     },
-    anneeAcademiqueId:{
-        type:mongoose.Schema.ObjectId,
-        ref:"AnneeAcademique",
-        required:true,
+    anneeAcademiqueId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'AnneeAcademique',
+      required: true,
     },
-    createdAt:{
-        type:Date,
-        default:Date.now()
-    }
-},{
-    toJSON:{virtuals:true},
-    toObject:{virtuals:true}
-});
-StudentSchema.pre(/^find/, function(next){
-    this.populate({
-        path:"userId",
-        select:"name email addresse phone"
-    }).populate({
-        path:"anneeAcademiqueId",
-        select:"years"
-    }).populate({
-        path:"classeId",
-        select:"nom niveau"
-    });
-    next()
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+StudentSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'anneeAcademiqueId',
+    select: 'nom',
+  }).populate({
+    path: 'classeId',
+    select: 'nom niveau',
+  });
+  next();
 });
 const Student = mongoose.model('Student', StudentSchema);
 module.exports = Student;
