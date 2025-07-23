@@ -6,17 +6,10 @@ const paiementSchema = new mongoose.Schema(
       enum: ['inscription', 'mensualité', 'examen', 'soutenance'],
       required: true,
     },
-    montantPaye: {
+    montant: {
       type: Number,
       required: true,
     },
-    montantTotal: {
-      type: Number,
-      required: true,
-    },
-    resteApaye: {
-      type: Number,
-    }, // ou calculé dynamiquement
     modePaiement: {
       type: String,
       enum: ['espèce', 'mobile_money', 'virement'],
@@ -27,7 +20,7 @@ const paiementSchema = new mongoose.Schema(
     },
     statut: {
       type: String,
-      enum: ['payé', 'enAttente', 'annulé', 'partiel'],
+      enum: ['payé', 'enAttente', 'annulé'],
       required: true,
     },
     description: {

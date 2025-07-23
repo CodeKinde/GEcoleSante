@@ -85,3 +85,5 @@ exports.calculGlobalStudent = catchAsync(async (req, res) => {
     etudiant,
   });
 });
+
+const genererFacture = catchAsync(async (req, res, next) => {});

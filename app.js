@@ -12,6 +12,7 @@ const enseignantRouter = require('./routes/enseignantRouter');
 const evaluationRouter = require('./routes/evaluationRoutes');
 const bulletinRouter = require('./routes/bulletinRoutes');
 const paiementRouter = require('./routes/paiementRoutes');
+const factureRouter = require('./routes/factureRouter');
 
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -33,8 +34,9 @@ app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/cours', courRouter);
 app.use('/api/v1/enseignants', enseignantRouter);
 app.use('/api/v1/evaluations', evaluationRouter);
-app.use('/api/v1/bulletin', bulletinRouter);
+app.use('/api/v1/bulletins', bulletinRouter);
 app.use('/api/v1/paiements', paiementRouter);
+app.use('/api/v1/factures', factureRouter);
 
 app.all('*', (req, res, next) => {
   res.status(404).json({

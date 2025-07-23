@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const paiementController = require('./../controllers/paiementController');
 const authController = require('./../controllers/authController');
-router.get('/:studentId', paiementController.getPaiementsStudent);
-router.get('/statut/:studentId', paiementController.calculGlobalStudent);
+router.get('/student/:studentId', paiementController.getPaiementsStudent);
+router.get(
+  '/statut/student/:studentId',
+  paiementController.calculGlobalStudent
+);
 
 router
   .route('/')
